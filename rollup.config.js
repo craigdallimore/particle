@@ -1,5 +1,7 @@
 import typescript from "@rollup/plugin-typescript";
 import serve from "rollup-plugin-serve";
+import resolve from "@rollup/plugin-node-resolve";
+import commonjs from "@rollup/plugin-commonjs";
 import livereload from "rollup-plugin-livereload";
 
 export default {
@@ -12,6 +14,8 @@ export default {
   plugins: [
     typescript({ sourceMap: true, inlineSources: true }),
     serve("static"),
+    commonjs(),
+    resolve(),
     livereload(),
   ],
 };
