@@ -1,5 +1,5 @@
 import { drawScene } from "./drawScene";
-import { setDimensions, updateState } from "./state";
+import { initialiseState, State, updateState } from "./state";
 
 const canvas = document.body.querySelector("#canvas") as HTMLCanvasElement;
 const ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
@@ -8,16 +8,14 @@ ctx.scale(devicePixelRatio, devicePixelRatio);
 
 const rAF = window.requestAnimationFrame;
 
-function onTick(ctx: CanvasRenderingContext2D, tick: number) {
-  const state = updateState(tick);
-  drawScene(ctx, state);
-}
+function main(ctx: CanvasRenderingContext2D, state: State) {
+  const onTick = updateState(state);
 
-function main(ctx: CanvasRenderingContext2D) {
   function frame(prevtime: number) {
     return function nextFrame(time: number) {
       const tick = time - prevtime;
-      onTick(ctx, tick);
+      const state = onTick(tick);
+      drawScene(ctx, state);
       rAF(frame(time));
     };
   }
@@ -27,6 +25,6 @@ function main(ctx: CanvasRenderingContext2D) {
 
 const p = canvas.parentNode as HTMLElement;
 const rect = p.getBoundingClientRect();
-setDimensions(rect.width, rect.height);
+const state = initialiseState(rect.width, rect.height);
 
-main(ctx);
+main(ctx, state);
