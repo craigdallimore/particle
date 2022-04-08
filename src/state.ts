@@ -17,13 +17,13 @@ export function updateState(state: State) {
 
 export function initialiseState(width: number, height: number): State {
   const emitter = new Emitter();
-  emitter.position = [100, 100];
+  emitter.position = [100, 20];
   emitter.steering = [0, 0];
-  emitter.maxParticles = 1000;
+  emitter.maxParticles = 300;
   emitter.initialForce = [-100, -100];
   emitter.initialRange = [200, 200];
-  emitter.initialEnergy = 3;
-  emitter.initialEnergyRange = 13;
+  emitter.initialEnergy = 15;
+  emitter.initialEnergyRange = 5;
 
   const state: State = {
     ui: {

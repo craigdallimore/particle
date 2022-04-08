@@ -27,8 +27,14 @@ export default class Emitter {
   initialEnergyRange: number;
   // Holds the particles
   particles: Array<Particle>;
-  //
+  // The total number of particles this emitter can hold
   maxParticles: number;
+
+  getStrokeStyle(p: Particle): string {
+    const l = 100;
+    const a = 0.7 - p.energy / 15;
+    return `hsla(270, 0%, ${l}%, ${a})`;
+  }
 
   addParticle() {
     const p = new Particle();
@@ -64,6 +70,9 @@ export default class Emitter {
   update(time: number) {
     if (this.particles.length < this.maxParticles) {
       // Currently adding one particle per update
+      // Potential improvements:
+      // - add particles at a variable rate
+      // - reset off-canvas particles instead of adding new ones
       this.addParticle();
     }
 

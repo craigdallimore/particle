@@ -1,12 +1,11 @@
+import Emitter from "./emitter";
 import { Particle } from "./particle";
 import { State } from "./state";
 
-function drawParticle(ctx: CanvasRenderingContext2D, p: Particle) {
+function drawParticle(ctx: CanvasRenderingContext2D, p: Particle, e: Emitter) {
   ctx.save();
 
-  const l = 20 + p.energy * 20;
-
-  ctx.strokeStyle = `hsla(270, 50%, ${l}%, ${p.energy * 0.5})`;
+  ctx.strokeStyle = e.getStrokeStyle(p);
 
   ctx.beginPath();
   ctx.moveTo(p.lastPosition[0], p.lastPosition[1]);
@@ -21,6 +20,6 @@ export function drawScene(ctx: CanvasRenderingContext2D, state: State): void {
   ctx.clearRect(0, 0, state.ui.width, state.ui.height);
 
   state.emitters.forEach((e) => {
-    e.particles.forEach((p) => drawParticle(ctx, p));
+    e.particles.forEach((p) => drawParticle(ctx, p, e));
   });
 }
