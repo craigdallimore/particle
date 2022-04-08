@@ -1,6 +1,12 @@
 import { add, multiply, Vector } from "@decoy9697/vector";
 import { Particle } from "./particle";
 
+function isOutsideArea(point: Vector, area: Vector): boolean {
+  return (
+    point[0] < 0 || point[1] < 0 || point[0] > area[0] || point[1] > area[1]
+  );
+}
+
 export default class Emitter {
   constructor() {
     this.position = [0, 0];
@@ -31,9 +37,13 @@ export default class Emitter {
   maxParticles: number;
 
   getStrokeStyle(p: Particle): string {
-    const l = 100;
-    const a = 0.7 - p.energy / 15;
-    return `hsla(270, 0%, ${l}%, ${a})`;
+    const energyPercent = p.energy / this.initialEnergy;
+
+    const h = energyPercent * 43;
+    const s = 100;
+    const l = energyPercent * 100;
+    const a = energyPercent;
+    return `hsla(${h}, ${s}%, ${l}%, ${a})`;
   }
 
   addParticle() {
@@ -54,8 +64,8 @@ export default class Emitter {
     p.energy = energy; // Lifetime of particle in seconds
   }
 
-  updateParticle(p: Particle, time: number) {
-    if (p.energy <= 0) {
+  updateParticle(p: Particle, time: number, dimensions: Vector) {
+    if (p.energy <= 0 || isOutsideArea(p.position, dimensions)) {
       // Rather than destroying and allocating particles, when they run out of
       // energy we reset them to some new starting state.
       return this.resetParticle(p);
@@ -67,7 +77,7 @@ export default class Emitter {
     p.energy = p.energy - time;
   }
 
-  update(time: number) {
+  update(time: number, dimensions: Vector) {
     if (this.particles.length < this.maxParticles) {
       // Currently adding one particle per update
       // Potential improvements:
@@ -76,6 +86,6 @@ export default class Emitter {
       this.addParticle();
     }
 
-    this.particles.forEach((p) => this.updateParticle(p, time));
+    this.particles.forEach((p) => this.updateParticle(p, time, dimensions));
   }
 }
