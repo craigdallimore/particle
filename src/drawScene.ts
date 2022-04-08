@@ -20,5 +20,7 @@ function drawParticle(ctx: CanvasRenderingContext2D, p: Particle) {
 export function drawScene(ctx: CanvasRenderingContext2D, state: State): void {
   ctx.clearRect(0, 0, state.ui.width, state.ui.height);
 
-  state.particles.forEach((p) => drawParticle(ctx, p));
+  state.emitters.forEach((e) => {
+    e.particles.forEach((p) => drawParticle(ctx, p));
+  });
 }
